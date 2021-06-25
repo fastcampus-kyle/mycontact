@@ -30,6 +30,15 @@ class PersonServiceTest {
   }
 
   @Test
+  void getPepopleByName(){
+    givenPeople();
+
+    List<Person> result = personService.getPeopleByName("martin");
+
+    result.forEach(System.out::println);
+  }
+
+  @Test
   void getPerson(){
     givenPeople();
 
