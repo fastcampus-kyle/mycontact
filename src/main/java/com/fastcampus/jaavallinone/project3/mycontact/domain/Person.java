@@ -1,11 +1,13 @@
 package com.fastcampus.jaavallinone.project3.mycontact.domain;
 
-import java.time.LocalDate;
+import com.fastcampus.jaavallinone.project3.mycontact.domain.dto.Birthday;
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,7 +39,9 @@ public class Person {
 
   private String address;
 
-  private LocalDate birthday;
+  @Valid
+  @Embedded
+  private Birthday birthday;
 
   private String job;
 

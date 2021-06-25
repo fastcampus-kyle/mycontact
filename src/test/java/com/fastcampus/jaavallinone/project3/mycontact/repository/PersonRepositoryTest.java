@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fastcampus.jaavallinone.project3.mycontact.domain.Person;
+import com.fastcampus.jaavallinone.project3.mycontact.domain.dto.Birthday;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -77,8 +78,7 @@ class PersonRepositoryTest {
     givenPerson("sophia", 7, "AB", LocalDate.of(1994, 6, 30));
     givenPerson("benny", 6, "A", LocalDate.of(1995, 8, 30));
 
-    List<Person> result = personRepository
-        .findByBirthdayBetween(LocalDate.of(1991, 8, 1), LocalDate.of(1991, 8, 31));
+    List<Person> result = personRepository.findByMonthOfBirthday(8);
 
     result.forEach(System.out::println);
   }
@@ -89,7 +89,7 @@ class PersonRepositoryTest {
 
   private void givenPerson(String name, int age, String bloodType, LocalDate birthday) {
     Person person = new Person(name, age, bloodType);
-    person.setBirthday(birthday);
+    person.setBirthday(new Birthday(birthday));
     personRepository.save(person);
   }
 }
