@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fastcampus.jaavallinone.project3.mycontact.domain.Person;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +39,17 @@ class PersonRepositoryTest {
 
   @Test
   void hashCodeAndEquals(){
-    Person person1 = new Person("martin", 10);
-    Person person2= new Person("martin", 10);
+    Person person1 = new Person("martin", 10, "A");
+    Person person2= new Person("martin", 10, "A");
 
     System.out.println(person1.equals(person2));
     System.out.println(person1.hashCode());
     System.out.println(person2.hashCode());
+
+    Map<Person, Integer> map = new HashMap<>();
+    map.put(person1, person1.hashCode());
+
+    System.out.println(map);
+    System.out.println(map.get(person2));
   }
 }
