@@ -1,6 +1,7 @@
 package com.fastcampus.jaavallinone.project3.mycontact.domain;
 
 import java.time.LocalDate;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -43,6 +44,7 @@ public class Person {
   @ToString.Exclude
   private String phoneNumber;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @ToString.Exclude
   private Block block;
 }
