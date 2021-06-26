@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
 
 @Entity
@@ -26,6 +28,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
+@Where(clause = "deleted = false")
 public class Person {
 
   @Id
@@ -58,6 +61,9 @@ public class Person {
 
   @ToString.Exclude
   private String phoneNumber;
+
+  @ColumnDefault("0")
+  private boolean deleted;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @ToString.Exclude

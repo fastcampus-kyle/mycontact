@@ -7,6 +7,7 @@ import com.fastcampus.jaavallinone.project3.mycontact.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,13 @@ public class PersonController {
   @PatchMapping("/{id}")
   public void modifyPerson(@PathVariable Long id, String name){
     personService.modify(id, name);
+
+    log.info("personDto -> {}", personRepository.findAll());
+  }
+
+  @DeleteMapping("/{id}")
+  public void deletePerson(@PathVariable Long id){
+    personService.delete(id);
 
     log.info("personDto -> {}", personRepository.findAll());
   }
