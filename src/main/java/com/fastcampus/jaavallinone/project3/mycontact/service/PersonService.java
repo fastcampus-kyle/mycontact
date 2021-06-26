@@ -33,4 +33,9 @@ public class PersonService {
   public List<Person> getPeopleByName(String name) {
     return personRepository.findByName(name);
   }
+
+  public void put(Person person){
+    personRepository.save(person);
+  }
+
 }
