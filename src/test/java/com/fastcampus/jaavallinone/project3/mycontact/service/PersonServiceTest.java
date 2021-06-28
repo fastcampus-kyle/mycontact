@@ -2,6 +2,7 @@ package com.fastcampus.jaavallinone.project3.mycontact.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,6 +23,10 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
@@ -31,6 +36,20 @@ class PersonServiceTest {
 
   @Mock
   private PersonRepository personRepository;
+
+  @Test
+  void getAll() {
+    when(personRepository.findAll(any(Pageable.class)))
+        .thenReturn(new PageImpl<>(
+            Lists.newArrayList(new Person("martin"), new Person("dennis"), new Person("tony"))));
+
+    Page<Person> result = personService.getAll(PageRequest.of(0, 3));
+
+    assertThat(result.getNumberOfElements()).isEqualTo(3);
+    assertThat(result.getContent().get(0).getName()).isEqualTo("martin");
+    assertThat(result.getContent().get(1).getName()).isEqualTo("dennis");
+    assertThat(result.getContent().get(2).getName()).isEqualTo("tony");
+  }
 
   @Test
   void getPepopleByName() {
@@ -116,7 +135,7 @@ class PersonServiceTest {
   }
 
   @Test
-  void deleteIfPersonNotFound(){
+  void deleteIfPersonNotFound() {
     when(personRepository.findById(1L))
         .thenReturn(Optional.empty());
 
@@ -157,6 +176,7 @@ class PersonServiceTest {
   }
 
   private static class IsPersonWillBeUpdate implements ArgumentMatcher<Person> {
+
     @Override
     public boolean matches(Person person) {
       return equals(person.getName(), "martin")
