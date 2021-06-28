@@ -3,6 +3,7 @@ package com.fastcampus.jaavallinone.project3.mycontact.controller;
 import com.fastcampus.jaavallinone.project3.mycontact.controller.dto.PersonDto;
 import com.fastcampus.jaavallinone.project3.mycontact.domain.Person;
 import com.fastcampus.jaavallinone.project3.mycontact.service.PersonService;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ public class PersonController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public void postPerson(@RequestBody PersonDto personDto) {
+  public void postPerson(@RequestBody @Valid PersonDto personDto) {
     personService.put(personDto);
   }
 
