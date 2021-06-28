@@ -3,7 +3,6 @@ package com.fastcampus.jaavallinone.project3.mycontact.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,19 +21,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 @Slf4j
 @SpringBootTest
 @Transactional
 class PersonControllerTest {
-
-  @Autowired
-  private PersonController personController;
 
   private MockMvc mockMvc;
 
@@ -45,14 +41,12 @@ class PersonControllerTest {
   private ObjectMapper objectMapper;
 
   @Autowired
-  private MappingJackson2HttpMessageConverter messageConverter;
+  private WebApplicationContext wac;
 
   @BeforeEach
   void beforeEach() {
     mockMvc = MockMvcBuilders
-        .standaloneSetup(personController)
-        .setMessageConverters(messageConverter)
-        .alwaysDo(print())
+        .webAppContextSetup(wac)
         .build();
   }
 
