@@ -2,7 +2,6 @@ package com.fastcampus.jaavallinone.project3.mycontact.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,12 +18,9 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
@@ -68,12 +64,9 @@ class PersonServiceTest {
 
   @Test
   void put() {
-    PersonDto dto = PersonDto
-        .of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
+    personService.put(mockPersonDto());
 
-    personService.put(dto);
-
-    verify(personRepository, times(1)).save(any(Person.class));
+    verify(personRepository, times(1)).save(argThat(new IsPersonWillBeInserted()));
   }
 
   @Test
@@ -103,9 +96,63 @@ class PersonServiceTest {
     verify(personRepository, times(1)).save(argThat(new IsPersonWillBeUpdate()));
   }
 
+  @Test
+  void modifyByNameIfPersonNotFound() {
+    when(personRepository.findById(1L))
+        .thenReturn(Optional.empty());
+
+    assertThrows(RuntimeException.class, () -> personService.modify(1L, "daniel"));
+  }
+
+  @Test
+  void modifyByName() {
+    when(personRepository.findById(1L))
+        .thenReturn(Optional.of(new Person("martin")));
+
+    personService.modify(1L, "daniel");
+
+    verify(personRepository, times(1)).save(argThat(new IsNameWillBeUpdated()));
+  }
+
+  @Test
+  void deleteIfPersonNotFound(){
+    when(personRepository.findById(1L))
+        .thenReturn(Optional.empty());
+
+    assertThrows(RuntimeException.class, () -> personService.delete(1L));
+  }
+
+  @Test
+  void delete() {
+    when(personRepository.findById(1L))
+        .thenReturn(Optional.of(new Person("martin")));
+
+    personService.delete(1L);
+
+    verify(personRepository, times(1)).save(argThat(new IsPersonWillBeDeleted()));
+
+  }
+
   private PersonDto mockPersonDto() {
     return PersonDto
         .of("martin", "programming", "판교", LocalDate.now(), "programmer", "010-1111-2222");
+  }
+
+  private static class IsPersonWillBeInserted implements ArgumentMatcher<Person> {
+
+    @Override
+    public boolean matches(Person person) {
+      return equals(person.getName(), "martin")
+          && equals(person.getHobby(), "programming")
+          && equals(person.getAddress(), "판교")
+          && equals(person.getBirthday(), Birthday.of(LocalDate.now()))
+          && equals(person.getJob(), "programmer")
+          && equals(person.getPhoneNumber(), "010-1111-2222");
+    }
+
+    private boolean equals(Object actual, Object expected) {
+      return expected.equals(actual);
+    }
   }
 
   private static class IsPersonWillBeUpdate implements ArgumentMatcher<Person> {
@@ -123,5 +170,22 @@ class PersonServiceTest {
       return expected.equals(actual);
     }
   }
+
+  private static class IsNameWillBeUpdated implements ArgumentMatcher<Person> {
+
+    @Override
+    public boolean matches(Person person) {
+      return person.getName().equals("daniel");
+    }
+  }
+
+  private static class IsPersonWillBeDeleted implements ArgumentMatcher<Person> {
+
+    @Override
+    public boolean matches(Person person) {
+      return person.isDeleted();
+    }
+  }
+
 
 }
