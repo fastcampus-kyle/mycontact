@@ -1,15 +1,9 @@
 package com.fastcampus.jaavallinone.project3.mycontact.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.fastcampus.jaavallinone.project3.mycontact.domain.Person;
-import com.fastcampus.jaavallinone.project3.mycontact.domain.dto.Birthday;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +21,6 @@ class PersonRepositoryTest {
 
     Person person = new Person();
     person.setName("john");
-    person.setAge(10);
     person.setBloodType("A");
 
     personRepository.save(person);
@@ -36,7 +29,7 @@ class PersonRepositoryTest {
 
     assertThat(result.size()).isEqualTo(1);
     assertThat(result.get(0).getName()).isEqualTo("john");
-    assertThat(result.get(0).getAge()).isEqualTo(10);
+//    assertThat(result.get(0).getAge()).isEqualTo(10);
     assertThat(result.get(0).getBloodType()).isEqualTo("A");
   }
 

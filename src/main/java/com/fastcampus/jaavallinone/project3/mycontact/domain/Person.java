@@ -2,6 +2,7 @@ package com.fastcampus.jaavallinone.project3.mycontact.domain;
 
 import com.fastcampus.jaavallinone.project3.mycontact.controller.dto.PersonDto;
 import com.fastcampus.jaavallinone.project3.mycontact.domain.dto.Birthday;
+import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -11,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,10 +40,6 @@ public class Person {
   @Column(nullable = false)
   private String name;
 
-  @NonNull
-  @Min(1)
-  private int age;
-
   private String hobby;
 
   @NotEmpty
@@ -70,10 +66,6 @@ public class Person {
   private Block block;
 
   public void set(PersonDto personDto) {
-    if (personDto.getAge() != 0) {
-      this.setAge(personDto.getAge());
-    }
-
     if (!StringUtils.isEmpty(personDto.getHobby())) {
       this.setHobby(personDto.getHobby());
     }
@@ -93,6 +85,18 @@ public class Person {
     if (!StringUtils.isEmpty(personDto.getPhoneNumber())) {
       this.setPhoneNumber(personDto.getPhoneNumber());
     }
+  }
 
+  public Integer getAge() {
+      if (this.birthday != null) {
+        return LocalDate.now().getYear() - this.birthday.getYearOfBirthday() + 1;
+      }
+    return null;
+  }
+
+  public boolean isBirthdayToday () {
+    return LocalDate.now().equals(
+        LocalDate.of(this.birthday.getYearOfBirthday(), this.birthday.getMonthOfBirthday(),
+            this.birthday.getDayOfBirthday()));
   }
 }
